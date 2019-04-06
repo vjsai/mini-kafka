@@ -1,6 +1,6 @@
 package com.vjsai.mini.mina.api;
 
-public interface IoFilterChain {
+public interface IoFilterChain extends IoFilter {
     /**
      * adds filter to chain
      * @param name
@@ -11,8 +11,8 @@ public interface IoFilterChain {
 
     /**
      * Removes filter from the chain
-     * @param filter
+     * @param name
      * @return
      */
-    boolean removeFilter(IoFilter filter);
+    boolean removeFilter(String name);
 }
