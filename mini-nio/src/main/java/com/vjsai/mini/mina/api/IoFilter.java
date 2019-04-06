@@ -1,4 +1,4 @@
-package com.vjsai.mini.mina.commons.api;
+package com.vjsai.mini.mina.api;
 
 import com.vjsai.mini.mina.exceptions.NioBaseWriteException;
 

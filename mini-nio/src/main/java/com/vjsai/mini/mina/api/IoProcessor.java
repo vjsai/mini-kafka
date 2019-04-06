@@ -1,4 +1,4 @@
-package com.vjsai.mini.mina.commons.api;
+package com.vjsai.mini.mina.api;
 
 public interface IoProcessor<S extends IoSession> {
     /**
