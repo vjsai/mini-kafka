@@ -22,7 +22,7 @@ public interface IoFilter {
      * @throws NioBaseWriteException
      * @throws IOException
      */
-    byte[] writeFilter(IoSession session, byte[] writeBytes) throws NioBaseWriteException, IOException;
+    void writeFilter(IoSession session, byte[] writeBytes) throws NioBaseWriteException, IOException;
 
     /**
      * Removes the filter

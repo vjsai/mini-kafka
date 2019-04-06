@@ -20,16 +20,16 @@ public class BaseFilterChain implements IoFilterChain {
     private Map<String, IoFilter> filterMap = new HashMap<String, IoFilter>();
 
     public boolean addFilter(String filterName, IoFilter filter) {
-        if(!filterMap.containsKey(filterName)){
+        if (!filterMap.containsKey(filterName)) {
             this.filterList.add(filter);
-            this.filterMap.put(filterName,filter);
+            this.filterMap.put(filterName, filter);
             return true;
         }
         return false;
     }
 
     public boolean removeFilter(String filterName) {
-        if(filterMap.containsKey(filterName)){
+        if (filterMap.containsKey(filterName)) {
             IoFilter removed = this.filterMap.remove(filterName);
             this.filterList.remove(removed);
             return true;
@@ -38,14 +38,23 @@ public class BaseFilterChain implements IoFilterChain {
     }
 
     public byte[] filterReceive(IoSession session, byte[] filterBytes) throws IOException {
-        return new byte[0];
+        /**
+         * Iterate over all filters and apply byte transforms
+         */
+        for (IoFilter filter : filterList) {
+            filterBytes = filter.filterReceive(session, filterBytes);
+        }
+        return filterBytes;
     }
 
-    public byte[] writeFilter(IoSession session, byte[] writeBytes) throws NioBaseWriteException, IOException {
-        return new byte[0];
+    public void writeFilter(IoSession session, byte[] writeBytes) throws NioBaseWriteException, IOException {
+        for(IoFilter filter : filterList){
+            filter.writeFilter(session, writeBytes);
+        }
     }
 
     public void removeFilter() {
-
+        filterList.clear();
+        filterMap.clear();
     }
 }
