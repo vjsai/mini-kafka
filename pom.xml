@@ -12,6 +12,7 @@
     <module>mini-kafka-server</module>
     <module>mini-kafka-client</module>
     <module>mini-kafka-core</module>
+    <module>mini-nio</module>
   </modules>
 
 
