@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Chain of Responsibilty is handled here.If a new filter wants to be used can be added here
+ * Chain of Responsibilty is handled here. If a new filter wants to be used can be added here
  */
 public class BaseFilterChain implements IoFilterChain {
 
-    private List<IoFilter> filterList = new ArrayList<IoFilter>();
-    private Map<String, IoFilter> filterMap = new HashMap<String, IoFilter>();
+    private volatile List<IoFilter> filterList = new ArrayList<IoFilter>();
+    private volatile Map<String, IoFilter> filterMap = new HashMap<String, IoFilter>();
 
     public boolean addFilter(String filterName, IoFilter filter) {
         if (!filterMap.containsKey(filterName)) {
@@ -54,7 +54,13 @@ public class BaseFilterChain implements IoFilterChain {
     }
 
     public void removeFilter() {
-        filterList.clear();
-        filterMap.clear();
+        if (filterMap != null) {
+            filterMap.clear();
+            filterMap = null;
+        }
+        if (filterList != null) {
+            filterList.clear();
+            filterList = null;
+        }
     }
 }

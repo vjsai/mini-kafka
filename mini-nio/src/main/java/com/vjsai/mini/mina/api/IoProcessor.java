@@ -2,6 +2,8 @@ package com.vjsai.mini.mina.api;
 
 import com.vjsai.mini.mina.session.SocketSessionState;
 
+import java.io.IOException;
+
 
 public interface IoProcessor {
     /**
@@ -26,6 +28,6 @@ public interface IoProcessor {
     /**
      * Closes the session
      */
-    void close();
+    void close() throws IOException;
 
 }

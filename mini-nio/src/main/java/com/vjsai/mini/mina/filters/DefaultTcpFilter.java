@@ -1,8 +1,10 @@
 package com.vjsai.mini.mina.filters;
 
 import com.vjsai.mini.mina.constants.SessionStateConstants;
+import com.vjsai.mini.mina.exceptions.NioBaseWriteException;
 import com.vjsai.mini.mina.session.SocketSessionState;
 import com.vjsai.mini.mina.utils.ByteDecoder;
+import com.vjsai.mini.mina.utils.ByteEncoder;
 import com.vjsai.mini.mina.utils.ByteOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +61,7 @@ public class DefaultTcpFilter extends BaseFilterChain implements SessionStateCon
                 dstByteBuffer.get(byteDst);
                 System.arraycopy(byteDst, 0, readBuffer, bufferPosition, readByteLength);
                 bufferPosition += readByteLength;
+                //Set the position in the buffer
                 session.setBufferPosition(bufferPosition);
 
             }
@@ -76,7 +79,7 @@ public class DefaultTcpFilter extends BaseFilterChain implements SessionStateCon
         if (exceptionProtocol) {
             return fullProtocol;
         }
-
+        //decode basing on ByteOrder
         int curProtocolLen = ByteDecoder.decodeInt(readBuffer, 0, ByteOrder.Little_Endian);
         if (curProtocolLen > 0 && (curProtocolLen == session.getBufferPosition() - BOUND_BYTES_NUMBER)) {
             fullProtocol = new byte[curProtocolLen];
@@ -90,7 +93,57 @@ public class DefaultTcpFilter extends BaseFilterChain implements SessionStateCon
         return fullProtocol;
     }
 
+    @Override
+    public void writeFilter(SocketSessionState session, byte[] writeBytes) throws NioBaseWriteException, IOException {
+        //check for null
+        if (writeBytes == null) {
+            throw new NioBaseWriteException("writeBytes cannot be NULL");
+        }
+        //check if writeBytes exceed session
+        if (writeBytes.length > session.getBufferSize() - BOUND_BYTES_NUMBER) {
+            throw new NioBaseWriteException("writeBytes length exceeded session size");
+        }
+
+        int writeBytesLength = writeBytes.length;
+        byte[] lengthBytes = new byte[BOUND_BYTES_NUMBER];
+        ByteEncoder.encodeInt(lengthBytes, 0, ByteOrder.Little_Endian, writeBytesLength);
+
+        byte[] protocol = new byte[writeBytesLength + BOUND_BYTES_NUMBER];
+
+        // length bytes
+        protocol[0] = lengthBytes[0];
+        protocol[1] = lengthBytes[1];
+        protocol[2] = lengthBytes[2];
+        protocol[3] = lengthBytes[3];
+
+        System.arraycopy(writeBytes, 0, protocol, BOUND_BYTES_NUMBER, writeBytesLength);
+
+        ByteBuffer dstByteBuffer = ByteBuffer.allocate(writeBytesLength + BOUND_BYTES_NUMBER);
+        dstByteBuffer.put(protocol);
+        dstByteBuffer.flip();
+        int writeLength = 0;
+
+        long activeTimeStamp = System.currentTimeMillis();
+
+        try {
+            //while the buffer is still left keep on writing to socket
+            while (dstByteBuffer.hasRemaining()) {
+                writeLength += session.getSocketChannel().write(dstByteBuffer);
+            }
+            activeTimeStamp = System.currentTimeMillis();
+        } catch (IOException e) {
+            session.setTimeoutFlag();
+            logger.warn("write bytes: " + session.toString(), e);
+            throw e;
+        }
+
+        if (writeLength > 0) {
+            session.setLastActiveTimeStamp(activeTimeStamp);
+        }
+    }
+
     /**
+     * Method to get length of the nextByte thats coming in
      * @param protocolBuffer
      * @param pos
      * @return
