@@ -75,13 +75,15 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
         this.filter = filter;
         this.handler = handler;
         this.bufferSize = calculateBufferSize(bufferSize);
+        this.readBuffer = new byte[this.bufferSize];
     }
 
     public SocketSessionState(SocketChannel socketChannel, IoFilter filter, IoHandler handler, int bufferSize, long idleTimeoutInMs) {
         this.socketChannel = socketChannel;
         this.filter = filter;
         this.handler = handler;
-        this.bufferSize = bufferSize;
+        this.bufferSize = calculateBufferSize(bufferSize);
+        this.readBuffer = new byte[this.bufferSize];
         this.idleTimeoutInMs = idleTimeoutInMs;
     }
 

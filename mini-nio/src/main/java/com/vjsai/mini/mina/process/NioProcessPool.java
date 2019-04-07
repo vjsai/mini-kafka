@@ -6,6 +6,7 @@ import com.vjsai.mini.mina.session.SocketSessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -50,6 +51,10 @@ public class NioProcessPool implements IoProcessor {
 
     }
 
+    /**
+     * add session to start processing
+     * @param session
+     */
     public void add(SocketSessionState session) {
         IoProcessor processor = getProcessor(session);
         session.setRunnableProcessor(processor);
@@ -61,7 +66,11 @@ public class NioProcessPool implements IoProcessor {
         return processorPool[(int) (session.getSessionId() % poolSize)];
     }
 
-    public void close() {
+    /**
+     * tries closing all the threads in the pool
+     * @throws IOException
+     */
+    public void close() throws IOException {
         for (IoProcessor processor : processorPool) {
             processor.close();
         }
