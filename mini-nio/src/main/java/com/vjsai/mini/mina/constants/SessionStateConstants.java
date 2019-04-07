@@ -2,11 +2,11 @@ package com.vjsai.mini.mina.constants;
 
 public interface SessionStateConstants {
 
-     int DEFAULT_BUFFER_SIZE = Short.MAX_VALUE + 4;
+    int DEFAULT_BUFFER_SIZE = Short.MAX_VALUE + 4;
 
-     int MIN_BUFFER_SIZE = 256 + 4;
+    int MIN_BUFFER_SIZE = 256 + 4;
 
-     int MAX_BUFFER_SIZE = Integer.MAX_VALUE + 4;
+    int MAX_BUFFER_SIZE = Integer.MAX_VALUE + 4;
 
     int DEFAULT_TIMEOUT_COUNT = 5;
 

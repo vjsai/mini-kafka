@@ -115,7 +115,7 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
         if (message == null || message.length == 0) {
             throw new NioBaseWriteException("not available data to write");
         }
-        if (message.length > bufferSize -BOUND_BYTES_NUMBER) {
+        if (message.length > bufferSize - BOUND_BYTES_NUMBER) {
             throw new NioBaseWriteException(
                     "writeBytes length exceed session bufsize (buffersize - BOUND_BYTES_NUMBER)");
         }
@@ -140,7 +140,7 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
         byte[] message = writeAbleBufferQueue.peek();
         if (message != null) {
             try {
-                filter.writeFilter(this,message);
+                filter.writeFilter(this, message);
             } catch (NioBaseWriteException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -165,7 +165,7 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
         if (DEFAULT_TIMEOUT_SPAN_MS >= (currentTimeInMs - this.lastActiveTimeStamp) && (this.timeoutCount >= DEFAULT_TIMEOUT_COUNT)) {
             LOGGER.debug("timeout condition met session will be closed : " + this.toString());
             return true;
-        }else if((currentTimeInMs - this.lastActiveTimeStamp) >= DEFAULT_MAX_IDLE_SPAN_MS){
+        } else if ((currentTimeInMs - this.lastActiveTimeStamp) >= DEFAULT_MAX_IDLE_SPAN_MS) {
             LOGGER.debug("idle timeout met session will be closed : " + this.toString());
             return true;
         }
@@ -202,6 +202,7 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
 
     /**
      * Sets to writable
+     *
      * @param flag
      * @throws IllegalArgumentException
      * @throws CancelledKeyException
