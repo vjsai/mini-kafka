@@ -2,8 +2,8 @@ package com.vjsai.mini.mina.filters;
 
 import com.vjsai.mini.mina.api.IoFilter;
 import com.vjsai.mini.mina.api.IoFilterChain;
-import com.vjsai.mini.mina.api.IoSession;
 import com.vjsai.mini.mina.exceptions.NioBaseWriteException;
+import com.vjsai.mini.mina.session.SocketSessionState;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class BaseFilterChain implements IoFilterChain {
         return false;
     }
 
-    public byte[] filterReceive(IoSession session, byte[] filterBytes) throws IOException {
+    public byte[] filterReceive(SocketSessionState session, byte[] filterBytes) throws IOException {
         /**
          * Iterate over all filters and apply byte transforms
          */
@@ -47,7 +47,7 @@ public class BaseFilterChain implements IoFilterChain {
         return filterBytes;
     }
 
-    public void writeFilter(IoSession session, byte[] writeBytes) throws NioBaseWriteException, IOException {
+    public void writeFilter(SocketSessionState session, byte[] writeBytes) throws NioBaseWriteException, IOException {
         for(IoFilter filter : filterList){
             filter.writeFilter(session, writeBytes);
         }

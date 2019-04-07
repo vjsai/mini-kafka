@@ -36,6 +36,8 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
 
     private int bufferSize;
 
+    private int bufferPosition;
+
     private IoProcessor<SocketSessionState> runnableProcessor;
 
     /**
@@ -133,10 +135,12 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
      */
     public void writeLocal() {
         boolean isEmpty = writeAbleBufferQueue.isEmpty();
+        //check if writable buffer queue is empty if so make it readable
         if (isEmpty) {
             this.setWriteAble(!isEmpty);
             return;
         }
+        //If the queue is not empty apply writeFilter and remove from queue
         byte[] message = writeAbleBufferQueue.peek();
         if (message != null) {
             try {
@@ -265,5 +269,27 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
 
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
+    }
+
+    public byte[] getReadBuffer() {
+        return readBuffer;
+    }
+
+    public int getBufferPosition() {
+        return bufferPosition;
+    }
+
+    public void setBufferPosition(int bufferPosition) {
+        this.bufferPosition = bufferPosition;
+    }
+
+    public void resetBuffer(){
+        bufferPosition = 0;
+        this.readBuffer[0] = (byte) 0;
+        this.readBuffer[1] = (byte) 0;
+    }
+
+    public void setLastActiveTimeStamp(long lastActiveTimeStamp) {
+        this.lastActiveTimeStamp = lastActiveTimeStamp;
     }
 }
