@@ -13,4 +13,6 @@ public interface SessionStateConstants {
     int DEFAULT_TIMEOUT_SPAN_MS = 30 * 1000;
 
     long DEFAULT_MAX_IDLE_SPAN_MS = Long.MAX_VALUE;
+
+    int BOUND_BYTES_NUMBER = 4;
 }

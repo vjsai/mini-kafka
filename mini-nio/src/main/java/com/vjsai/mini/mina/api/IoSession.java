@@ -9,7 +9,7 @@ public interface IoSession {
      * get unique identifier for session id
      * @return
      */
-    long getSessionid();
+    long getSessionId();
 
     /**
      * get handler for state
@@ -42,5 +42,11 @@ public interface IoSession {
     void close();
 
     String toString();
+
+    /**
+     * To get the IP Address
+     * @return
+     */
+    String getIPAddress();
 
 }
