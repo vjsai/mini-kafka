@@ -38,7 +38,7 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
 
     private int bufferPosition;
 
-    private IoProcessor<SocketSessionState> runnableProcessor;
+    private IoProcessor runnableProcessor;
 
     /**
      * Buffer for reading from channel
@@ -259,7 +259,7 @@ public class SocketSessionState implements IoSession, SessionStateConstants {
         this.handler = handler;
     }
 
-    public void setRunnableProcessor(IoProcessor<SocketSessionState> runnableProcessor) {
+    public void setRunnableProcessor(IoProcessor runnableProcessor) {
         this.runnableProcessor = runnableProcessor;
     }
 

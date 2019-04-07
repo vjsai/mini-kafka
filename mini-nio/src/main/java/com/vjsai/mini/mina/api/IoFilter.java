@@ -1,6 +1,7 @@
 package com.vjsai.mini.mina.api;
 
 import com.vjsai.mini.mina.exceptions.NioBaseWriteException;
+import com.vjsai.mini.mina.session.SocketSessionState;
 
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ public interface IoFilter {
      * @return
      * @throws IOException
      */
-    byte[] filterReceive(IoSession session, byte[] filterBytes) throws  IOException;
+    byte[] filterReceive(SocketSessionState session, byte[] filterBytes) throws  IOException;
 
     /**
      * write Filter
@@ -22,7 +23,7 @@ public interface IoFilter {
      * @throws NioBaseWriteException
      * @throws IOException
      */
-    void writeFilter(IoSession session, byte[] writeBytes) throws NioBaseWriteException, IOException;
+    void writeFilter(SocketSessionState session, byte[] writeBytes) throws NioBaseWriteException, IOException;
 
     /**
      * Removes the filter

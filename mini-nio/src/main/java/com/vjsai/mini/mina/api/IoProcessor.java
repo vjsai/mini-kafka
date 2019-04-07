@@ -1,24 +1,27 @@
 package com.vjsai.mini.mina.api;
 
-public interface IoProcessor<S extends IoSession> {
+import com.vjsai.mini.mina.session.SocketSessionState;
+
+
+public interface IoProcessor {
     /**
      * Adds session to the queue
      * @param session
      */
-    void add(S session);
+    void add(SocketSessionState session);
 
     /**
      * destory the session
      * @param session
      */
-    void destroy(S session);
+    void destroy(SocketSessionState session);
 
     /**
      * Will tell whether the session is valid
      * @param session
      * @return
      */
-    boolean isValid(S session);
+    boolean isValid(SocketSessionState session);
 
     /**
      * Closes the session
